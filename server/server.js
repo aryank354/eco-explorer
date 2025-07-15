@@ -14,13 +14,19 @@ const PORT = process.env.PORT || 3001; // Use port from .env or default to 3001
 
 // --- Middleware ---
 // Enable Cross-Origin Resource Sharing (CORS) so our React app can talk to this server
-app.use(cors({
+const corsOptions = {
   origin: [
-    'http://localhost:5173', 
-    'http://localhost:3000', 
-    'http://127.0.0.1:5173', // ✅ Add this line
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'http://127.0.0.1:5173',
     'https://eco-explorer-mu.vercel.app'
-  ] }));
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type'],
+  credentials: true
+};
+
+app.use(cors(corsOptions));
 
 
 // Enable the express.json middleware to parse JSON request bodies
