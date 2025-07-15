@@ -1,5 +1,5 @@
 // const API_URL = 'http://localhost:3001/api';
-const API_URL = 'https://eco-explorer-07eo.onrender.com';
+const API_URL = 'https://eco-explorer-07eo.onrender.com/api';
 
 
 
