@@ -19,7 +19,7 @@ app.use(cors({
     'http://localhost:5173', 
     'http://localhost:3000', 
     'http://127.0.0.1:5173', // ✅ Add this line
-    'https://eco-explorer-mu.vercel.app/app'
+    'https://eco-explorer-mu.vercel.app'
   ] }));
 
 
