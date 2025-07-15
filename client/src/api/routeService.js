@@ -1,4 +1,7 @@
-const API_URL = 'http://localhost:3001/api';
+// const API_URL = 'http://localhost:3001/api';
+const API_URL = 'https://eco-explorer-l131.onrender.com';
+
+
 
 export const fetchScenicRoute = async (startCoords, endCoords) => {
   const response = await fetch(`${API_URL}/route`, {
