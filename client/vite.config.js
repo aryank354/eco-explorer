@@ -17,7 +17,7 @@ export default defineConfig({
   proxy: {
     '/api': 'http://localhost:3001',
   },
-  allowedHosts: ['32be97f7bbbf.ngrok-free.app'], // Replace with your actual ngrok domain
+  allowedHosts: ['https://eco-explorer-l131.onrender.com'],  // Replace with your actual ngrok domain
 
 }
 
