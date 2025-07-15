@@ -52,7 +52,14 @@ const HIGH_DATA_TILE_URL = `https://api.mapbox.com/styles/v1/mapbox/streets-v12/
 }`;
 
 // --- Main Component ---
-const MapView = ({ route, startPoint, endPoint, isSlowConnection }) => {
+const MapView = ({
+  route,
+  startPoint,
+  endPoint,
+  isSlowConnection,
+  matchedPlace,
+  distanceKm,
+}) => {
   const routeCoordinates =
     Array.isArray(route) && route.length > 0
       ? route.map((point) => [point.lat, point.lng])
@@ -66,7 +73,15 @@ const MapView = ({ route, startPoint, endPoint, isSlowConnection }) => {
       : null;
 
   return (
-    <div className="h-full w-full">
+    <div className="h-full w-full relative">
+      {/* Info Overlay */}
+      {(matchedPlace || distanceKm) && (
+        <div className="absolute top-4 left-4 bg-white/90 rounded-xl shadow-md px-4 py-2 text-sm z-[999] backdrop-blur">
+          {matchedPlace && <p>📍 <b>Matched:</b> {matchedPlace}</p>}
+          {distanceKm && <p>📏 <b>Distance:</b> {distanceKm} km</p>}
+        </div>
+      )}
+
       <MapContainer
         center={[28.6139, 77.209]} // Default to Delhi
         zoom={12}

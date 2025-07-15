@@ -20,19 +20,26 @@ function getDistance(start, end) {
  */
 async function getCoordinates(placeName) {
   const endpoint = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(placeName)}.json`;
+
   try {
     const response = await axios.get(endpoint, {
       params: {
         access_token: process.env.MAPBOX_ACCESS_TOKEN,
         limit: 1,
-        proximity: '77.2090,28.6139'
+        country: 'IN',                    // ✅ Bias toward India
+        proximity: '77.2090,28.6139',    // ✅ Bias toward Delhi (India Gate)
+        types: 'poi'                     // ✅ Prefer POIs like monuments
       }
     });
 
-    if (response.data.features.length === 0)
+    if (response.data.features.length === 0) {
+      console.error(`❌ No geocoding result found for "${placeName}"`);
       throw new Error(`Could not find coordinates for "${placeName}"`);
+    }
 
-    return response.data.features[0].center;
+    const result = response.data.features[0];
+    console.log(`📍 Mapbox matched: ${result.place_name}`);
+    return result.center;
   } catch (error) {
     console.error('Geocoding error:', error.message);
     throw new Error('Failed to find destination coordinates.');
@@ -78,20 +85,26 @@ async function getWalkingRoute(start, end, waypoint = null) {
  * Main function to calculate scenic route with validation and fallback.
  */
 const findScenicRoute = async (startCoords, destinationText) => {
-  console.log(`Processing AI-enhanced route for:`, destinationText);
+  console.log(`🚀 Processing route for destination: "${destinationText}"`);
 
-  const endCoordsArray = await getCoordinates(destinationText);
+  let endCoordsArray;
+  try {
+    endCoordsArray = await getCoordinates(destinationText);
+  } catch (err) {
+    console.error('❌ Geocoding failed:', err.message);
+    throw new Error("Could not find destination. Try something more specific.");
+  }
+
   const endCoords = { lng: endCoordsArray[0], lat: endCoordsArray[1] };
-
   const distanceKm = getDistance(startCoords, endCoords);
-  console.log(`Distance between points: ${distanceKm.toFixed(2)} km`);
+  console.log(`📏 Distance from start to destination: ${distanceKm.toFixed(2)} km`);
 
   if (distanceKm > 25) {
     throw new Error(`Destination is too far for a walking route (max 25 km).`);
   }
 
-  const scenicWaypoint = (distanceKm <= 10)
-    ? { lng: 77.2215, lat: 28.5931 } // Lodhi Garden
+  const scenicWaypoint = distanceKm <= 10
+    ? { lng: 77.2215, lat: 28.5931 } // Lodhi Garden as scenic waypoint
     : null;
 
   const route = await getWalkingRoute(startCoords, endCoords, scenicWaypoint);
