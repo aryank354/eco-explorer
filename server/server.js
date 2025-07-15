@@ -18,7 +18,8 @@ app.use(cors({
   origin: [
     'http://localhost:5173', 
     'http://localhost:3000', 
-    'http://127.0.0.1:5173' // ✅ Add this line
+    'http://127.0.0.1:5173', // ✅ Add this line
+    'https://eco-explorer-n8ci.vercel.app/'
   ] }));
 
 
